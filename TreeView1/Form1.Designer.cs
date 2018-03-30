@@ -58,6 +58,7 @@
             this.btnBottomUpExecute.TabIndex = 2;
             this.btnBottomUpExecute.Text = "button2";
             this.btnBottomUpExecute.UseVisualStyleBackColor = true;
+            this.btnBottomUpExecute.Click += new System.EventHandler(this.btnBottomUpExecute_Click);
             // 
             // Form1
             // 

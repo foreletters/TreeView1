@@ -125,9 +125,22 @@ namespace TreeView1
             }
             
         }
-        private string BottomUp(TreeNode node)
+        private void BottomUp(TreeNode node)
         {
-            return null;
+            bottomUP = bottomUP.Length == 0 ? bottomUP + node.Text : bottomUP + "," + node.Text;
+            if (node.Parent != null)
+            {
+                
+                BottomUp(node.Parent);
+            }
+            
+        }
+
+        private void btnBottomUpExecute_Click(object sender, EventArgs e)
+        {
+            BottomUp(tvListOfAssets.SelectedNode);
+            MessageBox.Show(bottomUP);
+            bottomUP = "";
         }
     }
 }
