@@ -15,9 +15,11 @@ namespace TreeView1
         TreeNode tn1 = new TreeNode();
         TreeNode tn2 = new TreeNode();
         TreeNode tn3 = new TreeNode();
-        Queue<KeyValuePair<string, string>> q1 = new Queue<KeyValuePair<string, string>>();
-        Queue<KeyValuePair<string, string>> q2 = new Queue<KeyValuePair<string, string>>();
-        Queue<KeyValuePair<string, string>> q3 = new Queue<KeyValuePair<string, string>>();
+        Stack<KeyValuePair<string, string>> q1 = new Stack<KeyValuePair<string, string>>();
+        Stack<KeyValuePair<string, string>> q2 = new Stack<KeyValuePair<string, string>>();
+        Stack<KeyValuePair<string, string>> q3 = new Stack<KeyValuePair<string, string>>();
+        string topDown = "";
+        string bottomUP = "";
         public Form1()
         {
             InitializeComponent();
@@ -33,25 +35,27 @@ namespace TreeView1
             tvListOfAssets.Nodes.Add(tn1);
             tvListOfAssets.Nodes.Add(tn2);
             tvListOfAssets.Nodes.Add(tn3);
-            q1.Enqueue(new KeyValuePair<string, string>("Cash", "USD"));
-            q1.Enqueue(new KeyValuePair<string, string>("Cash", "GBP"));
-            q1.Enqueue(new KeyValuePair<string, string>("Cash", "EUR"));
-            q1.Enqueue(new KeyValuePair<string, string>("Non-Cash Non-Fund", "CitiGroup"));
-            q1.Enqueue(new KeyValuePair<string, string>("Fund", "GLD"));
-            q1.Enqueue(new KeyValuePair<string, string>("Fund", "VIX"));
-            q1.Enqueue(new KeyValuePair<string, string>("Fund", "Something Else"));
-            q1.Enqueue(new KeyValuePair<string, string>("Non-Cash Non-Fund", "GS"));
-            q1.Enqueue(new KeyValuePair<string, string>("Non-Cash Non-Fund", "AMG"));
+            q1.Push(new KeyValuePair<string, string>("Cash", "USD"));
+            q1.Push(new KeyValuePair<string, string>("Cash", "GBP"));
+            q1.Push(new KeyValuePair<string, string>("Cash", "EUR"));
+            q1.Push(new KeyValuePair<string, string>("Non-Cash Non-Fund", "CitiGroup"));
+            q1.Push(new KeyValuePair<string, string>("Fund", "GLD"));
+            q1.Push(new KeyValuePair<string, string>("Fund", "VIX"));
+            q1.Push(new KeyValuePair<string, string>("Fund", "Something Else"));
+            q1.Push(new KeyValuePair<string, string>("Non-Cash Non-Fund", "GS"));
+            q1.Push(new KeyValuePair<string, string>("Non-Cash Non-Fund", "AMG"));
 
-            q2.Enqueue(new KeyValuePair<string, string>("AMG", "Stock"));
-            q2.Enqueue(new KeyValuePair<string, string>("CitiGroup", "Stock"));
-            q2.Enqueue(new KeyValuePair<string, string>("VIX", "ADR"));
-            q2.Enqueue(new KeyValuePair<string, string>("GBP", "ADR"));
+            q2.Push(new KeyValuePair<string, string>("AMG", "Stock"));
+            q2.Push(new KeyValuePair<string, string>("CitiGroup", "Stock"));
+            q2.Push(new KeyValuePair<string, string>("VIX", "ADR"));
+            q2.Push(new KeyValuePair<string, string>("GBP", "ADR"));
 
-            q3.Enqueue(new KeyValuePair<string, string>("Stock", "Domestic Asset"));
-            q3.Enqueue(new KeyValuePair<string, string>("Stock", "Domestic Asset"));
-            q3.Enqueue(new KeyValuePair<string, string>("ADR", "Foreign Asset"));
-            q3.Enqueue(new KeyValuePair<string, string>("ADR", "Foreign Asset"));
+            q3.Push(new KeyValuePair<string, string>("Stock", "Domestic Asset"));
+            q3.Push(new KeyValuePair<string, string>("Stock", "Cusip"));
+            q3.Push(new KeyValuePair<string, string>("ADR", "Foreign Asset"));
+            q3.Push(new KeyValuePair<string, string>("Stock", "Domestic Asset"));
+            q3.Push(new KeyValuePair<string, string>("Stock", "Cusip"));
+            q3.Push(new KeyValuePair<string, string>("ADR", "Foreign Asset"));
 
             while (q1.Count > 0)
             {
@@ -85,18 +89,18 @@ namespace TreeView1
                 }
             }
         }
-        private void AddAssets(TreeNode  node, Queue<KeyValuePair<string,string>> q)
+        private void AddAssets(TreeNode  node, Stack<KeyValuePair<string,string>> q)
         {
             for (int i = 0; i < q.Count; i++)
             {
-                KeyValuePair<string, string> kvp = q.Dequeue();
+                KeyValuePair<string, string> kvp = q.Pop();
                 if (node.Text == kvp.Key)
                 {
                     node.Nodes.Add(kvp.Value);
                 }
                 else
                 {
-                    q.Enqueue(kvp);
+                    q.Push(kvp);
                 }
             }
             
@@ -105,15 +109,25 @@ namespace TreeView1
 
         private void btnTopDownExecute_Click(object sender, EventArgs e)
         {
-
+            TopDown(tvListOfAssets.SelectedNode);
+            MessageBox.Show(topDown);
+            topDown = "";
         }
         private void TopDown(TreeNode node)
         {
-
+            if(node.Nodes.Count>0)
+            {
+                foreach(TreeNode tn in node.Nodes)
+                {
+                    topDown = topDown.Length==0?topDown+tn.Text : topDown +", "+ tn.Text;
+                    TopDown(tn);
+                }
+            }
+            
         }
-        private void BottomUp(TreeNode node)
+        private string BottomUp(TreeNode node)
         {
-
+            return null;
         }
     }
 }
